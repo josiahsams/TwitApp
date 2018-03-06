@@ -27,6 +27,25 @@
 </head>
 
 <body ng-app="myApp">
+    <div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 id="modalTile" class="modal-title">Modal title</h4>
+                </div>
+                <div id="modalBody" class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
     <div>
         <nav class="navbar navbar-inverse" role="navigation" style="padding-left:50px;">
             <a class="navbar-brand" href="#">PowerAI</a>
@@ -39,6 +58,8 @@
         </nav>
     </div>
     <div class="container  ">
+
+
         <div ng-controller="myCtrl1 as c1">
 
             <div class="container-fluid">
@@ -47,14 +68,17 @@
                         <div>
                             <h3><span class="text-white">Abdul Kalam </span> <span class="label label-primary">{{c1.count["abdulkalam"]}} Votes</span></h3>
                         </div>
-                        <img src="/images/Abdul.jpg" class="img-rounded" alt="Abdul" height="200px">
+                        <a class="modallink" data-toggle="modal" href="#" data-target="#myModal" data-data="abdulkalam-modal-data" data-title="Abdul Kalam">
+                            <img src="/images/Abdul.jpg" class="img-rounded" alt="Abdul" height="200px">
+                        </a>
                     </div>
                     <div class="col-xs-6 col-md-6">
                         <div>
-
                             <h3><span class="text-white">Sridevi </span><span class="label label-primary">{{c1.count["sridevi"]}} Votes</span></h3>
                         </div>
-                        <img src="/images/Sridevi.jpg" class="img-rounded" alt="Sridevi" height="200px">
+                        <a class="modallink" data-toggle="modal" href="#" data-target="#myModal" data-data="sridevi-modal-data" data-title="Sridevi">
+                            <img src="/images/Sridevi.jpg" class="img-rounded" alt="Sridevi" height="200px">
+                        </a>
 
                     </div>
                 </div>
@@ -105,23 +129,50 @@
                     </div>
                 </div>
             </div>
+
+            <div id="abdulkalam-modal-data" class="container-fluid" style="display: none">
+                <div class="row">
+                    <div ng-repeat="item in c1.imagedata['abdulkalam']">
+                        <img class="col-xs-4 col-md-4" ng-src="{{item.imgurl}}" alt="{{item.imgurl}}" </div>
+                    </div>
+                </div>
+
+                <div id="sridevi-modal-data" class="container-fluid" style="display: none">
+                    <div class="row">
+                        <div ng-repeat="item in c1.imagedata['sridevi']">
+                            <img class="col-xs-4 col-md-4" ng-src="{{item.imgurl}}" alt="{{item.imgurl}}">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
-    </div>
 
-    <script type="application/javascript">
-        jQuery(function($) {
-            $('.carousel').carousel();
-            var caption = $('div.item:nth-child(1) .carousel-caption');
-            $('.new-caption-area').html(caption.html());
-            caption.css('display', 'none');
 
-            $(".carousel").on('slide.bs.carousel', function(evt) {
-                var caption = $('div.item:nth-child(' + ($(evt.relatedTarget).index() + 1) + ') .carousel-caption');
+        <script type="application/javascript">
+            jQuery(function($) {
+                $('.carousel').carousel();
+                var caption = $('div.item:nth-child(1) .carousel-caption');
                 $('.new-caption-area').html(caption.html());
                 caption.css('display', 'none');
+
+                $(".carousel").on('slide.bs.carousel', function(evt) {
+                    var caption = $('div.item:nth-child(' + ($(evt.relatedTarget).index() + 1) + ') .carousel-caption');
+                    $('.new-caption-area').html(caption.html());
+                    caption.css('display', 'none');
+                });
+
+                $(".modallink").on('click', function() {
+                    $("#modalTile").text(
+                        $(this).attr("data-title")
+                    );
+                    var id = $(this).attr("data-data");
+                    //console.log($(this).attr("data-data"));
+
+                    $("#modalBody").html($("#" + id).html());
+                });
             });
-        });
-    </script>
+        </script>
 </body>
 
 </html>

@@ -34,6 +34,7 @@
     function myCtrlFn($scope, $interval, myService1) {
         var c1 = this;
         c1.count = {};
+        c1.imagedata = {};
         var promise = myService1.getList();
         promise.then(function(response) {
                 c1.tweetList = response.data;
@@ -42,7 +43,7 @@
                 // console.log(response.data);
             })
             .catch(function(error) {
-                console.log("Error");
+                console.log("Error getList");
             });
 
         var promise = myService1.getCount();
@@ -50,11 +51,25 @@
                 for (var i = 0; i < response.data.length; i++) {
                     c1.count[response.data[i]._id.prediction] = response.data[i].count
                 }
+                for (var i = 0; i < response.data.length; i++) {
+                    var name = response.data[i]._id.prediction;
+                    var promise = myService1.getFullListByName(name);
+                    promise.then(function(response1) {
+                            c1.imagedata[response1.data[0].prediction] = response1.data
+                            //console.log(response1.data[0].prediction);
+                        })
+                        .catch(function(error) {
+                            console.log("Error getFullListByName" + error);
+                        });
+
+                }
                 // console.log(response.data);
             })
             .catch(function(error) {
-                console.log("Error");
+                console.log("Error getCount");
             });
+
+
 
         $scope.$watch('c1.tweets', function(oldValue, newValue) {
             if (typeof oldValue === "undefined") return;
@@ -68,10 +83,21 @@
                         for (var i = 0; i < response.data.length; i++) {
                             c1.count[response.data[i]._id.prediction] = response.data[i].count
                         }
+                        for (var i = 0; i < response.data.length; i++) {
+                            var name = response.data[i]._id.prediction;
+                            var promise = myService1.getFullListByName(name);
+                            promise.then(function(response1) {
+                                    c1.imagedata[response1.data[0].prediction] = response1.data
+                                    // console.log(response.data);
+                                })
+                                .catch(function(error) {
+                                    console.log("Error getFullListByName");
+                                });
+                        }
                         // console.log(response.data);
                     })
                     .catch(function(error) {
-                        console.log("Error");
+                        console.log("Error getCount");
                     });
             }
         });
@@ -111,6 +137,14 @@
             var response = $http({
                 method: "GET",
                 url: ApiBasePath + "/data/all"
+            });
+            return response;
+        }
+        mySer.getFullListByName = function(name) {
+            console.log("getFullListByName " + name);
+            var response = $http({
+                method: "GET",
+                url: ApiBasePath + "/data/all/" + name
             });
             return response;
         }

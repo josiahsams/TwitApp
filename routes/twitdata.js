@@ -15,12 +15,23 @@ router.get('/', function(req, res, next) {
 
 });
 
-router.get('/all', function(req, res, next) {
+router.get('/all/:prediction?', function(req, res, next) {
+    var pred = req.params.prediction;
 
-    TwitData.find({}).exec(function(err, tweets) {
-        if (err) throw err;
-        res.json(tweets);
-    });
+    if (!pred) {
+        TwitData.find({}).exec(function(err, tweets) {
+            if (err) throw err;
+            return res.json(tweets);
+        });
+    } else {
+        TwitData.find({
+            prediction: pred
+        }).exec(function(err, tweets) {
+            if (err) throw err;
+            console.log(pred);
+            return res.json(tweets);
+        });
+    }
 
 });
 
