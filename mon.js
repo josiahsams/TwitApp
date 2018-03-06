@@ -88,8 +88,9 @@ var MonitorTweet = function() {
                                     height: size.height
                                 };
                                 console.log(paramList);
+                                // url: "http://kinford3.aus.stglabs.ibm.com:5000/",
                                 request({
-                                    url: "http://kinford3.aus.stglabs.ibm.com:5000/",
+                                    url: "http://localhost:6006/",
                                     qs: paramList
                                 }, function(err, response, body) {
                                     if (err) {

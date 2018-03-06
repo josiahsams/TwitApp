@@ -5,6 +5,7 @@ from __future__ import print_function
 from flask import Flask, jsonify, request
 import numpy as np
 import tensorflow as tf
+import os
 import json
 import tempfile
 import urllib
@@ -67,41 +68,48 @@ def load_labels(label_file):
 def index():
     tmp = tempfile.NamedTemporaryFile()
     print("Create a new file " + tmp.name)
-
+    predList = []
     url = request.args.get('url')
     # width=int(request.args.get('width'))
     # height=int(request.args.get('height'))
 
     with tf.Session(graph=graph) as sess:
-        urllib.urlretrieve(url, tmp.name)
-        file_name = tmp.name
+        try:
+            urllib.urlretrieve(url, tmp.name)
+            file_name = tmp.name
 
-        t = read_tensor_from_image_file(
-            file_name,
-            input_height=input_height,
-            input_width=input_width,
-            input_mean=input_mean,
-            input_std=input_std)
+            t = read_tensor_from_image_file(
+                file_name,
+                input_height=input_height,
+                input_width=input_width,
+                input_mean=input_mean,
+                input_std=input_std)
 
-        results = sess.run(output_operation.outputs[0], {
-            input_operation.outputs[0]: t
-        })
+            results = sess.run(output_operation.outputs[0], {
+                input_operation.outputs[0]: t
+            })
 
-    results = np.squeeze(results)
+            results = np.squeeze(results)
 
-    top_k = results.argsort()[-5:][::-1]
-    labels = load_labels(label_file)
+            top_k = results.argsort()[-5:][::-1]
+            labels = load_labels(label_file)
 
-    predList = []
-    for i in top_k:
-        res = {}
-        res["label"] = labels[i]
-        res["score"] = str(results[i])
-        # res[labels[i]] = str(results[i])
-        print(res["label"] + " : " + res["score"])
-        predList.append(res)
-    print(predList)
-   # print(json.dumps(res, ensure_ascii=False))
+            for i in top_k:
+                res = {}
+                res["label"] = labels[i]
+                res["score"] = str(results[i])
+                # res[labels[i]] = str(results[i])
+                print(res["label"] + " : " + res["score"])
+                predList.append(res)
+            print(predList)
+            os.remove(file_name)
+        except Exception, e:
+            print(str(e))
+            os.remove(file_name)
+            response = jsonify("exception raised")
+            response.status_code = 500
+            return response
+          # print(json.dumps(res, ensure_ascii=False))
     return jsonify(predList)
 
 
@@ -113,9 +121,9 @@ if __name__ == '__main__':
     input_width = 299
     input_mean = 0
     input_std = 255
-    #input_layer = "input"
+    # input_layer = "input"
     input_layer = "Mul"
-    #output_layer = "InceptionV3/Predictions/Reshape_1"
+    # output_layer = "InceptionV3/Predictions/Reshape_1"
     output_layer = "final_result"
 
     graph = load_graph(model_file)
