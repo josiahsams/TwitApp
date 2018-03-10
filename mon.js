@@ -90,7 +90,7 @@ var MonitorTweet = function() {
                                 console.log(paramList);
                                 // url: "http://kinford3.aus.stglabs.ibm.com:5000/",
                                 request({
-                                    url: "http://localhost:6006/",
+                                    url: config.predictor,
                                     qs: paramList
                                 }, function(err, response, body) {
                                     if (err) {

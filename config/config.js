@@ -4,5 +4,6 @@ module.exports = {
   consumer_secret: 'RnBcOUeKdVOLfmF89bB55X4d0eR70uS4i2p4A0DIHMB4WyBSHJ',
   access_token: '969467272430538752-zgz9ZDxQTfnQJkZbGv12OYoKaK6ZaRT',
   access_token_secret: 'ZzCIqEKX7hmRc8zTxlO9NBRqn4wF6fvFdSzg3ZyWsn6Dw',
-  dburl: "mongodb://mongo:27017/joetest"
+  dburl: "mongodb://mongo:27017/joetest",
+  predictor: "http://predictor:5000"
 }
