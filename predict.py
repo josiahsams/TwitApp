@@ -102,7 +102,7 @@ def index():
                 print(res["label"] + " : " + res["score"])
                 predList.append(res)
             print(predList)
-            os.remove(file_name)
+            # os.remove(file_name)
         except Exception, e:
             print(str(e))
             os.remove(file_name)
@@ -114,9 +114,9 @@ def index():
 
 
 if __name__ == '__main__':
-    file_name = "/home/joe/test/image1.jpg"
-    model_file = "/home/joe/tf_files/retrained_graph.pb"
-    label_file = "/home/joe/tf_files/retrained_labels.txt"
+    file_name = ""
+    model_file = "/tf_files/retrained_graph.pb"
+    label_file = "/tf_files/retrained_labels.txt"
     input_height = 299
     input_width = 299
     input_mean = 0
