@@ -3,8 +3,8 @@
     angular.module('myApp', [])
         .controller('myCtrl1', myCtrlFn)
         .service('myService1', myServiceFn)
-        .directive('myList', myListDir)
-        .constant('ApiBasePath', "http://localhost:3000");
+        .directive('myList', myListDir);
+    //    .constant('ApiBasePath', "http://localhost:3000");
 
     myListDir.$inject = [];
 
@@ -122,21 +122,26 @@
 
     };
 
-    myServiceFn.$inject = ['$http', 'ApiBasePath'];
+    // myServiceFn.$inject = ['$http', 'ApiBasePath'];
+    //
+    // function myServiceFn($http, ApiBasePath) {
 
-    function myServiceFn($http, ApiBasePath) {
+    myServiceFn.$inject = ['$http'];
+    function myServiceFn($http) {
         var mySer = this;
         mySer.getList = function() {
             var response = $http({
                 method: "GET",
-                url: ApiBasePath + "/data"
+                url: "/data"
+                //url: ApiBasePath + "/data"
             });
             return response;
         }
         mySer.getFullList = function() {
             var response = $http({
                 method: "GET",
-                url: ApiBasePath + "/data/all"
+                url: "/data/all"
+                // url: ApiBasePath + "/data/all"
             });
             return response;
         }
@@ -144,14 +149,16 @@
             console.log("getFullListByName " + name);
             var response = $http({
                 method: "GET",
-                url: ApiBasePath + "/data/all/" + name
+                url: "/data/all/" + name
+                // url: ApiBasePath + "/data/all/" + name
             });
             return response;
         }
         mySer.getCount = function() {
             var response = $http({
                 method: "GET",
-                url: ApiBasePath + "/data/count"
+                url: "/data/count"
+                // url: ApiBasePath + "/data/count"
             });
             return response;
         }
